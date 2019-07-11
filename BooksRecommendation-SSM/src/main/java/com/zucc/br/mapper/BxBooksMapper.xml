@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zucc.br.mapper.BxBooksMapper" >
+  <resultMap id="BaseResultMap" type="com.zucc.br.pojo.BxBooks" >
+    <id column="bookid" property="bookid" jdbcType="INTEGER" />
+    <result column="ISBN" property="isbn" jdbcType="VARCHAR" />
+    <result column="BookTitle" property="booktitle" jdbcType="VARCHAR" />
+    <result column="BookAuthor" property="bookauthor" jdbcType="VARCHAR" />
+    <result column="YearOfPublication" property="yearofpublication" jdbcType="INTEGER" />
+    <result column="Publisher" property="publisher" jdbcType="VARCHAR" />
+    <result column="ImageURLS" property="imageurls" jdbcType="VARCHAR" />
+    <result column="ImageURLM" property="imageurlm" jdbcType="VARCHAR" />
+    <result column="ImageURLL" property="imageurll" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bookid, ISBN, BookTitle, BookAuthor, YearOfPublication, Publisher, ImageURLS, ImageURLM, 
+    ImageURLL, score
+  </sql>
+  <select id="findPasBooks"  parameterType="Integer" resultType="com.zucc.br.pojo.BxBooks">
+    select b.bookid, b.ISBN, b.BookTitle, b.BookAuthor, b.YearOfPublication, b.Publisher, b.ImageURLS, b.ImageURLM,
+     b.ImageURLL, r.score from bxbooks b, ratings r where r.userid=#{0} and b.bookid = r.bookid and r.score > 0
+  </select>
+  <select id="findAllBooks" resultType="com.zucc.br.pojo.BxBooks">
+     select * from bxbooks
+     limit #{0},#{1}
+  </select>
+  <select id="findPopularBooks" resultType="com.zucc.br.pojo.BxBooks">
+    select * from bxbooks b,(select bookid, avg(score) as score, count(*) as cou
+    from ratings
+    where score > 0
+    group by bookid
+    order by score desc) a
+    where a.bookid=b.bookid and cou > 150
+    limit 10
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bxbooks
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bxbooks
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zucc.br.pojo.BxBooks" >
+    insert into bxbooks (bookid, ISBN, BookTitle, 
+      BookAuthor, YearOfPublication, Publisher, 
+      ImageURLS, ImageURLM, ImageURLL, 
+      score)
+    values (#{bookid,jdbcType=INTEGER}, #{isbn,jdbcType=VARCHAR}, #{booktitle,jdbcType=VARCHAR}, 
+      #{bookauthor,jdbcType=VARCHAR}, #{yearofpublication,jdbcType=INTEGER}, #{publisher,jdbcType=VARCHAR}, 
+      #{imageurls,jdbcType=VARCHAR}, #{imageurlm,jdbcType=VARCHAR}, #{imageurll,jdbcType=VARCHAR}, 
+      #{score,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zucc.br.pojo.BxBooks" >
+    insert into bxbooks
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bookid != null" >
+        bookid,
+      </if>
+      <if test="isbn != null" >
+        ISBN,
+      </if>
+      <if test="booktitle != null" >
+        BookTitle,
+      </if>
+      <if test="bookauthor != null" >
+        BookAuthor,
+      </if>
+      <if test="yearofpublication != null" >
+        YearOfPublication,
+      </if>
+      <if test="publisher != null" >
+        Publisher,
+      </if>
+      <if test="imageurls != null" >
+        ImageURLS,
+      </if>
+      <if test="imageurlm != null" >
+        ImageURLM,
+      </if>
+      <if test="imageurll != null" >
+        ImageURLL,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bookid != null" >
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="isbn != null" >
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="booktitle != null" >
+        #{booktitle,jdbcType=VARCHAR},
+      </if>
+      <if test="bookauthor != null" >
+        #{bookauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="yearofpublication != null" >
+        #{yearofpublication,jdbcType=INTEGER},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurls != null" >
+        #{imageurls,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurlm != null" >
+        #{imageurlm,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurll != null" >
+        #{imageurll,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zucc.br.pojo.BxBooks" >
+    update bxbooks
+    <set >
+      <if test="isbn != null" >
+        ISBN = #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="booktitle != null" >
+        BookTitle = #{booktitle,jdbcType=VARCHAR},
+      </if>
+      <if test="bookauthor != null" >
+        BookAuthor = #{bookauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="yearofpublication != null" >
+        YearOfPublication = #{yearofpublication,jdbcType=INTEGER},
+      </if>
+      <if test="publisher != null" >
+        Publisher = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurls != null" >
+        ImageURLS = #{imageurls,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurlm != null" >
+        ImageURLM = #{imageurlm,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurll != null" >
+        ImageURLL = #{imageurll,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zucc.br.pojo.BxBooks" >
+    update bxbooks
+    set ISBN = #{isbn,jdbcType=VARCHAR},
+      BookTitle = #{booktitle,jdbcType=VARCHAR},
+      BookAuthor = #{bookauthor,jdbcType=VARCHAR},
+      YearOfPublication = #{yearofpublication,jdbcType=INTEGER},
+      Publisher = #{publisher,jdbcType=VARCHAR},
+      ImageURLS = #{imageurls,jdbcType=VARCHAR},
+      ImageURLM = #{imageurlm,jdbcType=VARCHAR},
+      ImageURLL = #{imageurll,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE}
+    where bookid = #{bookid,jdbcType=INTEGER}
+  </update>
+</mapper>
