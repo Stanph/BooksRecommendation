@@ -2,7 +2,7 @@
   <fragment>
     <v-container v-for="type in types" :key="type" fluid grid-list-md grey lighten-4>
       <v-subheader>{{ type }}</v-subheader>
-      <div v-if="type==='热门图书详情'">
+      <div v-if="type==='图书详情'">
         <v-layout row wrap>
           <v-flex xs12 sm6 md4>
             <v-hover>
@@ -33,7 +33,7 @@
                 >
                   Rate this book
                   <v-spacer></v-spacer>
-                  <span class="grey--text text--lighten-2 caption mr-2">({{bookDetail[0].score }})</span>
+                  <span class="black--text text--lighten-2 caption mr-2">({{bookDetail[0].score }})</span>
                   <v-rating
                     v-model="bookDetail[0].score"
                     background-color="grey"
@@ -58,8 +58,13 @@
           <v-spacer></v-spacer>
           <v-flex v-for="(item,index) in brBooks" :key="index+1" xs12 sm6 md4>
             <v-hover>
-              <v-card slot-scope="{ hover }" class="mx-auto" color="grey lighten-4" max-width="600">
-                <v-img :aspect-ratio="9/12" v-bind:src="item.l">
+              <v-card
+                slot-scope="{ hover }"
+                class="mx-auto"
+                color="grey lighten-4"
+                max-width="600"
+              >
+                <v-img :aspect-ratio="9/12" v-bind:src="item.l" @click="BooksGoTo(item.bookid)">
                   <v-expand-transition>
                     <div
                       v-if="hover"
@@ -82,7 +87,7 @@
                 <v-card-actions class="pa-3" @click="insertRating(item.bookid, item.score*2)">
                   Rate this book
                   <v-spacer></v-spacer>
-                  <span class="grey--text text--lighten-2 caption mr-2">({{ item.score }})</span>
+                  <span class="black--text text--lighten-2 caption mr-2">({{ item.score }})</span>
                   <v-rating
                     v-model="item.score"
                     background-color="grey"
@@ -113,11 +118,30 @@ export default {
     text: "",
     bookDetail: [],
     brBooks: [],
-    types: ["热门图书详情", "相关图书推荐"]
+    types: ["图书详情", "相关图书推荐"]
   }),
   created() {
-    this.getBookDetail();
-    this.getBRBooks();
+    this.initData();
+    /** 初始化其他 */
+    let pId = this.$route.params.pId;
+    if (pId) {
+      this.initOther(pId);
+    }
+  },
+  watch: {
+    //监听相同路由下参数变化的时候，从而实现异步刷新
+    $route(to, from) {
+      //做一些路由变化的响应
+      //打开加载动画
+      this.loading = true;
+      //重新获取数据
+      this.initData();
+      /** 初始化其他数据 */
+      let pid = this.$route.params.pid;
+      if (pid) {
+        this.initOther(pid);
+      }
+    }
   },
   methods: {
     getBRBooks() {
@@ -172,7 +196,7 @@ export default {
       this.getBookDetail();
       this.getBRBooks();
     }
-  }    
+  }
 };
 </script>
 <style>

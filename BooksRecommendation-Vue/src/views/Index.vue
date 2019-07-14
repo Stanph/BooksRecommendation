@@ -15,11 +15,10 @@
       </div>
       <div v-else>
         <v-layout row wrap>
-          <v-spacer></v-spacer>
           <v-flex v-for="(item,index) in brBooks" :key="index+1" xs12 sm6 md4>
             <v-hover>
-              <v-card slot-scope="{ hover }" class="mx-auto" color="grey lighten-4" max-width="600">
-                <v-img :aspect-ratio="9/12" v-bind:src="item.l">
+              <v-card slot-scope="{ hover }" class="mx-auto" color="grey lighten-4" max-width="600" >
+                <v-img :aspect-ratio="9/16" v-bind:src="item.l" @click="BooksGoTo(item.bookid)">
                   <v-expand-transition>
                     <div
                       v-if="hover"
@@ -42,7 +41,7 @@
                 <v-card-actions class="pa-3" @click="insertRating(item.bookid, item.score*2)">
                   Rate this book
                   <v-spacer></v-spacer>
-                  <span class="grey--text text--lighten-2 caption mr-2">({{ item.score }})</span>
+                  <span class="black--text text--lighten-2 caption mr-2">({{ item.score }})</span>
                   <v-rating
                     v-model="item.score"
                     background-color="grey"

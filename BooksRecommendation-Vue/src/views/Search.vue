@@ -4,7 +4,7 @@
       <v-layout row wrap>
         <v-flex v-for="(item,index) in data" :key="index+1" xs12 sm6 md4>
           <v-card dense>
-            <v-card class="mx-auto elevation-20" color="blue" dark style="max-width: 400px;">
+            <v-card class="mx-auto elevation-20" color="blue" dark style="max-width: 400px;"  >
               <v-layout justify-space-between>
                 <v-flex xs8>
                   <v-card-title primary-title>
@@ -21,13 +21,14 @@
                   height="125px"
                   v-bind:src="item.url"
                   style="flex-basis: 125px"
+                  @click="BooksGoTo(item.bookid)"
                 ></v-img>
               </v-layout>
               <v-divider dark></v-divider>
               <v-card-actions class="pa-3" @click="insertRating(item.bookid, item.score*2)">
                 Rate this book
                 <v-spacer></v-spacer>
-                <span class="grey--text text--lighten-2 caption mr-2">({{item.score}})</span>
+                <span class="gery--text text--lighten-2 caption mr-2">({{item.score}})</span>
                 <v-rating
                   v-model="item.score"
                   background-color="white"
